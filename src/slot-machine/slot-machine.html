@@ -1,0 +1,12 @@
+<h3>{{ Name() }}</h3>
+<input [(ngModel)]="Bet">
+<button (click)="ClickSpin()">Spin</button>
+
+@if(isSpin()){
+  <h3>我贏了 ${{Money()}} </h3>
+  <h3>螢幕: </h3>
+
+  @for (item of Screen(); track $index){
+    <div>{{ item }}</div>
+  }
+}
