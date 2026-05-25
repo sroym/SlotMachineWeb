@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {forceAutocomplete} from "@angular/cli/src/utilities/environment-options";
 
 @Component({
   selector: 'app-slot-machine',
@@ -13,6 +14,7 @@ export class SlotMachine {
   public Money = signal(0);
   public Screen = signal([[]]);
   public isSpin = signal(false);
+  public TransposedScreen = signal<string[][]>([]);
   protected Bet: number = 0;
 
   constructor(private httpService: HttpClient) {}
@@ -38,10 +40,19 @@ export class SlotMachine {
       .subscribe((res: any) => {
         this.Money.set(res.winMoney);
         this.Screen.set(res.screen);
+        this.TransposedScreen.set(this.Transpose(res.screen));
         if(this.Money() > 0) alert('恭喜中獎');
         if(!this.isSpin())this.isSpin.set(true);
       });
   }
+  private Transpose(screen: string[][]):string[][] {
+    const rows = screen[0].length;
+    const cols = screen.length;
+    return Array.from({length:rows}, (_, rowIndex) =>
+        Array.from({length:cols}, (_, colIndex) =>
+          screen[colIndex][rowIndex]
+        )
+    );
+  }
 
-  protected readonly screen = screen;
 }
