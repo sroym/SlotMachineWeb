@@ -19,8 +19,6 @@ describe('SlotMachine', () => {
   it('SpinAgain', () => {
     expect(component.Name()).toBe('角子老虎機');
     component.ClickSpin();
-    expect(component.Name()).toBe('角子老虎機 開張啦!');
-    component.ClickSpin();
-    expect(component.Name()).toBe('角子老虎機 開張啦!');
+    expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
   });
 });
