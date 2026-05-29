@@ -2,13 +2,14 @@
 <h2>Hello! {{ UserName() }}</h2>
 <input [(ngModel)]="Bet">
 <button (click)="ClickSpin()">Spin</button>
+<h3>餘額: ${{Money()}}</h3>
 @if(isSpin()){
-  <h3>我贏了 ${{Money()}} </h3>
+  <h3>這次贏了 ${{WinMoney()}} </h3>
   <h3>螢幕: </h3>
 
  <div class="Screen">
    @for (row of TransposedScreen();track $index){
-     <div class="row" [class.winning-row]="$index >= 1 && $index <= 3">
+     <div class="row">
        @for (cell of row; track $index){
          <div class="cell">{{cell}}</div>
        }

@@ -13,6 +13,7 @@ import { getLocaleCurrencyName } from '@angular/common';
 export class SlotMachine {
   public UserName = signal('');
   public Name = signal('角子老虎機');
+  public WinMoney = signal(0);
   public Money = signal(0);
   public Screen = signal([[]]);
   public isSpin = signal(false);
@@ -48,7 +49,7 @@ export class SlotMachine {
         if (res.userMoney > currentMoney) {
           alert('恭喜中獎');
         }
-
+        this.WinMoney.set(res.userMoney > currentMoney? res.userMoney - currentMoney :0);
         this.Money.set(res.userMoney);
         this.Screen.set(res.screen);
         this.TransposedScreen.set(this.Transpose(res.screen));

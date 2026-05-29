@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SlotMachine } from './slot-machine';
-import {provideHttpClient} from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('SlotMachine', () => {
@@ -32,15 +31,26 @@ describe('SlotMachine', () => {
 
   afterEach(() => {
     httpMock.verify();
-  })
+  });
 
   it('SpinAgain', () => {
     expect(component.Name()).toBe('角子老虎機');
     component.ClickSpin();
+    httpMock.expectOne('http://localhost:5141/Slot?bet=0').flush({
+      userMoney: 1000,
+      screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
+    });
+    expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
+    component.ClickSpin();
+    httpMock.expectOne('http://localhost:5141/Slot?bet=0').flush({
+      userMoney: 1000,
+      screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
+    });
     expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
   });
+
   it('should show balance', () => {
-    expect(component.Money()).toBe(0);
+    expect(component.Money()).toBe(1000);
   });
 
 });
