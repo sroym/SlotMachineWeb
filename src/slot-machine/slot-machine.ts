@@ -15,10 +15,9 @@ export class SlotMachine {
   public Name = signal('角子老虎機');
   public WinMoney = signal(0);
   public Money = signal(0);
-  public Screen = signal([[]]);
-  public isSpin = signal(false);
   public TransposedScreen = signal<string[][]>([]);
-  protected Bet: number = 0;
+  public  realWinMoney = signal(0);
+  Bet: number = 0;
 
   private isLoading = false;
 
@@ -47,13 +46,14 @@ export class SlotMachine {
     this.httpService.post(`http://localhost:5141/Slot?bet=${this.Bet}`, {}, {}).subscribe({
       next: (res: any) => {
         if (res.userMoney > currentMoney) {
+          let bet= +this.Bet;
           alert('恭喜中獎');
+          this.WinMoney.set(res.userMoney > currentMoney ? res.userMoney - currentMoney + bet : 0);
         }
-        this.WinMoney.set(res.userMoney > currentMoney? res.userMoney - currentMoney :0);
+        console.log('currentMoney:', currentMoney, 'res.userMoney:', res.userMoney, 'this.bet:', this.Bet);
+        console.log(typeof this.Bet);
         this.Money.set(res.userMoney);
-        this.Screen.set(res.screen);
-        this.TransposedScreen.set(this.Transpose(res.screen));
-        if (!this.isSpin()) this.isSpin.set(true);
+        this.TransposedScreen.set(this.transpose(res.screen));
       },
       error: (err) => {
         if (err.status == 400) alert(err.error);
@@ -83,11 +83,20 @@ export class SlotMachine {
     });
   }
 
-  private Transpose(screen: string[][]): string[][] {
-    const rows = screen[0].length;
-    const cols = screen.length;
-    return Array.from({ length: rows }, (_, rowIndex) =>
-      Array.from({ length: cols }, (_, colIndex) => screen[colIndex][rowIndex]),
+  private transpose(screen: string[][]): string[][] {
+    const rows = screen.length;
+    const cols = screen[0].length;
+
+    return Array.from({ length: cols }, (_, colIndex) =>
+      Array.from({ length: rows }, (_, rowIndex) => {
+        if (colIndex === 1) {
+          return screen[rows - 1 - rowIndex][colIndex];
+        }
+
+        return screen[rowIndex][colIndex];
+      })
     );
   }
+
+
 }

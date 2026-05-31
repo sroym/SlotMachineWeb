@@ -41,16 +41,69 @@ describe('SlotMachine', () => {
       screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
     });
     expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
-    component.ClickSpin();
-    httpMock.expectOne('http://localhost:5141/Slot?bet=0').flush({
-      userMoney: 1000,
-      screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
-    });
-    expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
+
   });
 
   it('should show balance', () => {
     expect(component.Money()).toBe(1000);
   });
 
+  it('贏了',() =>{
+    component.Bet = 10;
+    component.ClickSpin();
+    httpMock.expectOne('http://localhost:5141/Slot?bet=10').flush({
+      userMoney: 1090,
+      screen: [
+        ['7','h','$'],
+        ['$','$','$'],
+        ['7','2','$'],
+        ['$','$','$'],
+        ['7','$','$']
+      ]
+    });
+    expect(component.WinMoney()).toBe(100);
+    expect(component.Money()).toBe(1090);
+    expect(component.TransposedScreen()).toEqual([
+      ['7', '$', '7', '$', '7'],
+      ['$', '$', '2', '$', 'h'],
+      ['$', '$', '$', '$', '$']
+    ]);
+  });
+
+
+  it('輸了', () => {
+    component.Bet = 10;
+    component.ClickSpin();
+    httpMock.expectOne('http://localhost:5141/Slot?bet=10').flush({
+      userMoney: 990,
+      screen: [
+        ['7', 'h', '$'],
+        ['$', '$', '$'],
+        ['7', '2', '$'],
+        ['$', '$', '$'],
+        ['7', '$', '$'],
+      ],
+    });
+    expect(component.WinMoney()).toBe(0);
+    expect(component.Money()).toBe(990);
+  });
+
+  it('載入使用者名字', () =>{
+    expect(component.UserName()).toBe(('Roy'));
+  });
+
+it('沒有錢了怎麼辦拉', ()=>{
+  const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() =>{});
+  component.Bet = 100000;
+  component.ClickSpin();
+  httpMock.expectOne('http://localhost:5141/Slot?bet=100000').flush(
+    'No Money Get Out',
+    {status: 400, statusText:'Bsd Request'}
+  );
+
+  expect(alertSpy).toHaveBeenCalledWith('No Money Get Out');
 });
+
+});
+
+

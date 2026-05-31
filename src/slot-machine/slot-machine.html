@@ -3,7 +3,7 @@
 <input [(ngModel)]="Bet">
 <button (click)="ClickSpin()">Spin</button>
 <h3>餘額: ${{Money()}}</h3>
-@if(isSpin()){
+@if(TransposedScreen().length>0){
   <h3>這次贏了 ${{WinMoney()}} </h3>
   <h3>螢幕: </h3>
 
