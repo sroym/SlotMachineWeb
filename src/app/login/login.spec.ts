@@ -32,7 +32,10 @@ describe('Login', () => {
     component.Account = 'Roy';
     component.Password = 'password7777';
     component.ClickLogin();
-    httpMock.expectOne('http://localhost:5141/Login');
+    httpMock.expectOne('http://localhost:5141/Login').flush({
+      token: 'fake-token'
+    });
+    expect(component.Token()).toBe('fake-token');
 
   });
 })
