@@ -5,5 +5,9 @@
   template: ``,
 })
 export class Login {
+  Account: string = '';
+  Password: string = '';
+  ClickLogin() {
 
+  }
 }
