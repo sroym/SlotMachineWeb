@@ -1,32 +1,41 @@
 ﻿import {Component, signal} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import {environment} from '../../environment/environment';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'login',
-  template: ``,
+  imports: [FormsModule],
+  templateUrl: 'login.html',
+  standalone: true,
 })
 export class Login {
-
-   Account: string = '';
+  username: string = '';
   Password: string = '';
 
-  Token = signal('');
   ErrorMessage = signal('');
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
   ClickLogin() {
     this.http
-      .post('http://localhost:5141/Login', {
-        account: this.Account,
+      .post(`${environment.apiUrl}/Login`, {
+        username: this.username,
         password: this.Password,
       })
       .subscribe({
         next: (res: any) => {
-          this.Token.set(res.token);
+          this.authService.SetToken(res.token);
+          this.router.navigate(['/slot']);
         },
         error: (err) => {
           this.ErrorMessage.set(err.error);
-        }
+        },
       });
   }
 }

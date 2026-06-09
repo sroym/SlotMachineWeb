@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {environment} from '../environment/environment';
 import {forceAutocomplete} from "@angular/cli/src/utilities/environment-options";
 import { getLocaleCurrencyName } from '@angular/common';
 
@@ -43,7 +44,7 @@ export class SlotMachine {
 
     const currentMoney = this.Money();
 
-    this.httpService.post(`http://localhost:5141/Slot?bet=${this.Bet}`, {}, {}).subscribe({
+    this.httpService.post(`${environment.apiUrl}/Slot?bet=${this.Bet}`, {}, {}).subscribe({
       next: (res: any) => {
         if (res.userMoney > currentMoney) {
           let bet = +this.Bet;
@@ -78,7 +79,7 @@ export class SlotMachine {
         'Access-Control-Allow-Origin': '*',
       }),
     };
-    this.httpService.get(`http://localhost:5141/User`, httpOptions).subscribe({
+    this.httpService.get(`${environment.apiUrl}/User`, httpOptions).subscribe({
       next: (res: any) => {
         this.UserName.set(res.name);
         this.Money.set(res.userMoney);

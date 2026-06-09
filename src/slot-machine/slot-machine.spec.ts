@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SlotMachine } from './slot-machine';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { environment } from '../environment/environment';
 
 describe('SlotMachine', () => {
   let component: SlotMachine;
@@ -22,7 +23,7 @@ describe('SlotMachine', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     fixture.detectChanges();
-    httpMock.expectOne('http://localhost:5141/User').flush({
+    httpMock.expectOne(`${environment.apiUrl}/User`).flush({
       name: 'Roy',
       userMoney: 1000
     });
@@ -36,7 +37,7 @@ describe('SlotMachine', () => {
   it('SpinAgain', () => {
     expect(component.Name()).toBe('角子老虎機');
     component.ClickSpin();
-    httpMock.expectOne('http://localhost:5141/Slot?bet=0').flush({
+    httpMock.expectOne(`${environment.apiUrl}/Slot?bet=0`).flush({
       userMoney: 1000,
       screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
     });
@@ -51,7 +52,7 @@ describe('SlotMachine', () => {
   it('贏了',() =>{
     component.Bet = 10;
     component.ClickSpin();
-    httpMock.expectOne('http://localhost:5141/Slot?bet=10').flush({
+    httpMock.expectOne(`${environment.apiUrl}/Slot?bet=10`).flush({
       userMoney: 1090,
       screen: [
         ['7','h','$'],
@@ -74,7 +75,7 @@ describe('SlotMachine', () => {
   it('輸了', () => {
     component.Bet = 10;
     component.ClickSpin();
-    httpMock.expectOne('http://localhost:5141/Slot?bet=10').flush({
+    httpMock.expectOne(`${environment.apiUrl}/Slot?bet=10`).flush({
       userMoney: 990,
       screen: [
         ['7', 'h', '$'],
@@ -96,7 +97,7 @@ it('沒有錢了怎麼辦拉', ()=>{
   const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() =>{});
   component.Bet = 100000;
   component.ClickSpin();
-  httpMock.expectOne('http://localhost:5141/Slot?bet=100000').flush(
+  httpMock.expectOne(`${environment.apiUrl}/Slot?bet=100000`).flush(
     'No Money Get Out',
     {status: 400, statusText:'Bsd Request'}
   );
