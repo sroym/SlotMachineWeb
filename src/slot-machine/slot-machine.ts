@@ -16,7 +16,7 @@ export class SlotMachine {
   public WinMoney = signal(0);
   public Money = signal(0);
   public TransposedScreen = signal<string[][]>([]);
-  public  realWinMoney = signal(0);
+  public realWinMoney = signal(0);
   Bet: number = 0;
 
   private isLoading = false;
@@ -46,11 +46,18 @@ export class SlotMachine {
     this.httpService.post(`http://localhost:5141/Slot?bet=${this.Bet}`, {}, {}).subscribe({
       next: (res: any) => {
         if (res.userMoney > currentMoney) {
-          let bet= +this.Bet;
+          let bet = +this.Bet;
           alert('恭喜中獎');
           this.WinMoney.set(res.userMoney > currentMoney ? res.userMoney - currentMoney + bet : 0);
         }
-        console.log('currentMoney:', currentMoney, 'res.userMoney:', res.userMoney, 'this.bet:', this.Bet);
+        console.log(
+          'currentMoney:',
+          currentMoney,
+          'res.userMoney:',
+          res.userMoney,
+          'this.bet:',
+          this.Bet,
+        );
         console.log(typeof this.Bet);
         this.Money.set(res.userMoney);
         this.TransposedScreen.set(this.transpose(res.screen));
@@ -94,9 +101,7 @@ export class SlotMachine {
         }
 
         return screen[rowIndex][colIndex];
-      })
+      }),
     );
   }
-
-
 }
