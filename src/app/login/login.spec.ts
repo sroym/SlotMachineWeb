@@ -5,6 +5,7 @@ import {HttpTestingController, provideHttpClientTesting } from '@angular/common/
 import { AuthService } from '../auth/auth.service';
 import {routes} from '../app.routes';
 import { provideRouter } from '@angular/router';
+import { environment } from '../../environment/environment';
 
 describe('Login', () => {
   let component: Login;
@@ -35,9 +36,7 @@ describe('Login', () => {
     component.username = 'Roy';
     component.Password = 'password7777';
     component.ClickLogin();
-    httpMock.expectOne('http://localhost:5141/Login').flush({
-      token: 'fake-token'
-    });
+    httpMock.expectOne(`${environment.apiUrl}/Login`).flush('fake-token');
     expect(authService.GetToken()).toBe('fake-token');
 
   });
@@ -45,7 +44,7 @@ describe('Login', () => {
     component.username = 'Roy';
     component.Password = 'wrongpassword';
     component.ClickLogin();
-    httpMock.expectOne('http://localhost:5141/Login').flush(
+    httpMock.expectOne(`${environment.apiUrl}/Login`).flush(
       'Invalid credentials',
       {status: 401, statusText: 'Unauthorized'});
     expect(component.ErrorMessage()).toBe('Invalid credentials');

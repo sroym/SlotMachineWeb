@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'login',
   imports: [FormsModule],
-  templateUrl: 'login.html',
+  templateUrl: './login.html',
   standalone: true,
 })
 export class Login {
@@ -27,10 +27,10 @@ export class Login {
       .post(`${environment.apiUrl}/Login`, {
         username: this.username,
         password: this.Password,
-      })
+      }, {responseType: "text"})
       .subscribe({
         next: (res: any) => {
-          this.authService.SetToken(res.token);
+          this.authService.SetToken(res);
           this.router.navigate(['/slot']);
         },
         error: (err) => {
