@@ -7,10 +7,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Login {
 
-  Account: string = '';
+   Account: string = '';
   Password: string = '';
 
-  Token = signal('fake-token');
+  Token = signal('');
 
   constructor(private http: HttpClient) {}
   ClickLogin() {
@@ -19,6 +19,10 @@ export class Login {
         account: this.Account,
         password: this.Password,
       })
-      .subscribe();
+      .subscribe({
+        next: (res: any) => {
+          this.Token.set(res.token);
+        },
+      });
   }
 }

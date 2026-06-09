@@ -38,4 +38,13 @@ describe('Login', () => {
     expect(component.Token()).toBe('fake-token');
 
   });
+  it('帳號密碼錯誤，顯示錯誤訊息', () => {
+    component.Account = 'Roy';
+    component.Password = 'wrongpassword';
+    component.ClickLogin();
+    httpMock.expectOne('http://localhost:5141/Login').flush(
+      'Invalid credentials.',
+      {status: 401, statusText: 'Unauthorized'});
+    expect(component.ErrorMessage()).toBe('Invalid credentials.');
+  });
 })
