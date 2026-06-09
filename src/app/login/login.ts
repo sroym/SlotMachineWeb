@@ -11,6 +11,7 @@ export class Login {
   Password: string = '';
 
   Token = signal('');
+  ErrorMessage = signal('');
 
   constructor(private http: HttpClient) {}
   ClickLogin() {
@@ -23,6 +24,9 @@ export class Login {
         next: (res: any) => {
           this.Token.set(res.token);
         },
+        error: (err) => {
+          this.ErrorMessage.set(err.error);
+        }
       });
   }
 }

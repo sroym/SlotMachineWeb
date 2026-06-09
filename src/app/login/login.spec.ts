@@ -43,8 +43,8 @@ describe('Login', () => {
     component.Password = 'wrongpassword';
     component.ClickLogin();
     httpMock.expectOne('http://localhost:5141/Login').flush(
-      'Invalid credentials.',
+      'Invalid credentials',
       {status: 401, statusText: 'Unauthorized'});
-    expect(component.ErrorMessage()).toBe('Invalid credentials.');
+    expect(component.ErrorMessage()).toBe('Invalid credentials');
   });
 })
