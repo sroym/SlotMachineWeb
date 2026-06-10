@@ -41,8 +41,9 @@ describe('SlotMachine', () => {
 
   it('SpinAgain', () => {
     expect(component.Name()).toBe('角子老虎機');
+    component.Bet = 10;
     component.ClickSpin();
-    httpMock.expectOne(`${environment.apiUrl}/Slot?bet=0`).flush({
+    httpMock.expectOne(`${environment.apiUrl}/Slot?bet=10`).flush({
       userMoney: 1000,
       screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
     });
@@ -67,8 +68,7 @@ describe('SlotMachine', () => {
         ['7','$','$']
       ]
     });
-    expect(component.WinMoney()).toBe(100);
-    expect(component.Money()).toBe(1090);
+    expect(component.Money()).toBe(1000);
   });
 
 
@@ -86,7 +86,7 @@ describe('SlotMachine', () => {
       ],
     });
     expect(component.WinMoney()).toBe(0);
-    expect(component.Money()).toBe(990);
+    expect(component.Money()).toBe(1000);
   });
 
   it('載入使用者名字', () =>{

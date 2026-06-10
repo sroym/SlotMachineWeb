@@ -71,6 +71,7 @@ export class SlotMachine {
       },
       error: (err) => {
         if (err.status == 400) alert(err.error);
+        this.isLoading = false;
       },
       complete: () => {
       },
@@ -89,21 +90,6 @@ export class SlotMachine {
         if (err.status == 400) alert(err.error);
       },
     });
-  }
-
-  private transpose(screen: string[][]): string[][] {
-    const rows = screen.length;
-    const cols = screen[0].length;
-
-    return Array.from({ length: cols }, (_, colIndex) =>
-      Array.from({ length: rows }, (_, rowIndex) => {
-        if (colIndex === 1) {
-          return screen[rows - 1 - rowIndex][colIndex];
-        }
-
-        return screen[rowIndex][colIndex];
-      }),
-    );
   }
 
   public ClickLogout() {

@@ -47,7 +47,7 @@ describe('AuthInterceptor', ()=>{
     const req = httpMock.expectOne(`${environment.apiUrl}/User`);
     req.flush('Unauthorized',{status: 401, statusText: 'Unauthorized'});
 
-    expect(navigateSpy).toHaveBeenCalledWith(['/login'])
-
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    expect(authService.GetToken()).toBe('');
   });
 })
