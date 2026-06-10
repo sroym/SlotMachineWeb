@@ -3,24 +3,29 @@ import { SlotMachine } from './slot-machine';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from '../environment/environment';
+import { AuthService } from '../app/auth/auth.service';
+import { routes } from '../app/app.routes';
+import { provideRouter, Router } from '@angular/router';
 
 describe('SlotMachine', () => {
   let component: SlotMachine;
   let fixture: ComponentFixture<SlotMachine>;
   let httpMock: HttpTestingController;
-
+  let authService: AuthService;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SlotMachine],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideRouter(routes),
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SlotMachine);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
+    authService = TestBed.inject(AuthService);
 
     fixture.detectChanges();
     httpMock.expectOne(`${environment.apiUrl}/User`).flush({
@@ -104,6 +109,16 @@ it('沒有錢了怎麼辦拉', ()=>{
 
   expect(alertSpy).toHaveBeenCalledWith('No Money Get Out');
 });
+  it('登出後被清除token並跳回登入頁面', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    authService.SetToken('fake-token');
+
+    component.ClickLogout();
+
+    expect(authService.GetToken()).toBe('');
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+  });
 
 });
 

@@ -4,12 +4,15 @@ import { FormsModule } from '@angular/forms';
 import {environment} from '../environment/environment';
 import {forceAutocomplete} from "@angular/cli/src/utilities/environment-options";
 import { getLocaleCurrencyName } from '@angular/common';
+import { AuthService } from '../app/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-slot-machine',
   imports: [FormsModule],
   templateUrl: './slot-machine.html',
   styleUrl: './slot-machine.css',
+  standalone: true,
 })
 export class SlotMachine {
   public UserName = signal('');
@@ -22,7 +25,7 @@ export class SlotMachine {
 
   private isLoading = false;
 
-  constructor(private httpService: HttpClient) {}
+  constructor(private httpService: HttpClient, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.SetUserInfo();
@@ -104,5 +107,10 @@ export class SlotMachine {
         return screen[rowIndex][colIndex];
       }),
     );
+  }
+
+  public ClickLogout() {
+    this.authService.Logout();
+    this.router.navigate(['/login']);
   }
 }
