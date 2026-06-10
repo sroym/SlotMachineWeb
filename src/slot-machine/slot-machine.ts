@@ -54,29 +54,29 @@ export class SlotMachine {
 
   private CallSpinApi() {
     this.isLoading = true;
-
     const currentMoney = this.Money();
 
     this.httpService.post(`${environment.apiUrl}/Slot?bet=${this.Bet}`, {}, {}).subscribe({
       next: (res: any) => {
-        if (res.userMoney > currentMoney) {
-          let bet = +this.Bet;
-          alert('恭喜中獎');
-          this.WinMoney.set(res.userMoney > currentMoney ? res.userMoney - currentMoney + bet : 0);
-        }
-
-        this.Money.set(res.userMoney);
-        const result = this.transpose(res.screen);
-        this.StartStopAnimation(res.screen);
+        this.StartStopAnimation(res.screen, () => {
+          this.WinMoney.set(0);
+          this.Money.set(res.userMoney);
+          if (res.userMoney > currentMoney) {
+            let bet = +this.Bet;
+            this.WinMoney.set(res.userMoney - currentMoney + bet);
+            alert('恭喜中獎');
+          }
+          this.isLoading = false;
+        });
       },
       error: (err) => {
         if (err.status == 400) alert(err.error);
       },
       complete: () => {
-        this.isLoading = false;
       },
     });
   }
+
 
   private SetUserInfo() {
     this.httpService.get(`${environment.apiUrl}/User`).subscribe({
@@ -153,7 +153,7 @@ export class SlotMachine {
     }, 16);
   }
 
-  private StartStopAnimation(result: string[][]) {
+  private StartStopAnimation(result: string[][], onComplete?: () => void) {
     clearInterval(this.rollingInterval);
 
     result.forEach((col, colIndex) => {
@@ -172,6 +172,9 @@ export class SlotMachine {
         setTimeout(() => {
           inner.style.transition = 'transform 0.8s ease-out';
           inner.style.transform = 'translateY(0px)';
+          if(colIndex ===result.length - 1) {
+            setTimeout(() => onComplete?.(),800);
+          }
         }, 50);
       }, colIndex * 500);
     });
