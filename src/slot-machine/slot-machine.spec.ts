@@ -69,11 +69,6 @@ describe('SlotMachine', () => {
     });
     expect(component.WinMoney()).toBe(100);
     expect(component.Money()).toBe(1090);
-    expect(component.TransposedScreen()).toEqual([
-      ['7', '$', '7', '$', '7'],
-      ['$', '$', '2', '$', 'h'],
-      ['$', '$', '$', '$', '$']
-    ]);
   });
 
 

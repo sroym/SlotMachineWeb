@@ -1,0 +1,27 @@
+.screen {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+}
+
+.reel-wrap{
+  width: 60px;
+  height: 180px;
+  overflow: hidden;
+  border: 1px solid black;
+  position: relative;
+}
+
+.reel-inner{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.reel-cell{
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
