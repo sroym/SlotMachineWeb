@@ -37,6 +37,7 @@ export class SlotMachine {
   }
 
   public ClickSpin() {
+    this.WinMoney.set(0);
     if (this.isLoading) return;
     if(this.Bet<=0){
       alert('請先下注');
@@ -71,6 +72,8 @@ export class SlotMachine {
       },
       error: (err) => {
         if (err.status == 400) alert(err.error);
+        clearInterval(this.rollingInterval);
+        this.InitReels();
         this.isLoading = false;
       },
       complete: () => {
