@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../../environment/environment';
 import {AuthInterceptor} from './auth.interceptor';
-import { inject } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 describe('AuthInterceptor', ()=>{
   let httpMock: HttpTestingController;

@@ -59,7 +59,7 @@ export class SlotMachine {
 
     this.httpService.post(`${environment.apiUrl}/Slot?bet=${this.Bet}`, {}, {}).subscribe({
       next: (res: any) => {
-        this.StartStopAnimation(res.screen, () => {
+        this.StartStopAnimation(res.screen, res.stopIndexes,() => {
           this.WinMoney.set(0);
           this.Money.set(res.userMoney);
           if (res.userMoney > currentMoney) {
@@ -73,7 +73,6 @@ export class SlotMachine {
       error: (err) => {
         if (err.status == 400) alert(err.error);
         clearInterval(this.rollingInterval);
-        this.InitReels();
         this.isLoading = false;
       },
       complete: () => {
@@ -100,9 +99,8 @@ export class SlotMachine {
     this.router.navigate(['/login']);
   }
   private rollingInterval: any = null;
-  private readonly SYMBOLS = ['7', '$', 'K', 'Q', 'J'];
+  private readonly REEL_STRIP = ['J', '$', 'K', '$', 'Q', '$'];
   private readonly CELL_HEIGHT = 60;
-  private readonly VISIBLE_ROWS = 3;
 
   private buildReel(colIndex: number, symbols: string[]) {
     const inner = document.getElementById('reel-' + colIndex) as HTMLElement;
@@ -120,11 +118,7 @@ export class SlotMachine {
 
   private InitReels() {
     for (let i = 0; i < 5; i++) {
-      const symbols = Array.from(
-        { length: 20 },
-        () => this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)],
-      );
-      this.buildReel(i, symbols);
+      this.buildReel(i, this.REEL_STRIP)
     }
   }
 
@@ -142,30 +136,29 @@ export class SlotMachine {
     }, 16);
   }
 
-  private StartStopAnimation(result: string[][], onComplete?: () => void) {
-    clearInterval(this.rollingInterval);
+  private StartStopAnimation(result: string[][], stopIndexes: number[], onComplete?: () => void) {
+  clearInterval(this.rollingInterval);
 
-    result.forEach((col, colIndex) => {
+  result.forEach((col, colIndex) => {
+    setTimeout(() => {
+      const stopIndex = stopIndexes[colIndex];
+      const symbols = [
+        ...this.REEL_STRIP.slice(stopIndex),
+        ...this.REEL_STRIP.slice(0, stopIndex),
+        ...this.REEL_STRIP,
+      ];
+      this.buildReel(colIndex, symbols);
+      const inner = document.getElementById('reel-' + colIndex) as HTMLElement;
+      if (!inner) return;
+      inner.style.transform = `translateY(-${(symbols.length - 3) * this.CELL_HEIGHT}px)`;
       setTimeout(() => {
-        const symbols = [
-          ...col,
-          ...Array.from(
-            { length: 17 },
-            () => this.SYMBOLS[Math.floor(Math.random() * this.SYMBOLS.length)],
-          ),
-        ];
-        this.buildReel(colIndex, symbols);
-        const inner = document.getElementById('reel-' + colIndex) as HTMLElement;
-        if (!inner) return;
-        inner.style.transform = `translateY(-${17 * this.CELL_HEIGHT}px)`;
-        setTimeout(() => {
-          inner.style.transition = 'transform 0.8s ease-out';
-          inner.style.transform = 'translateY(0px)';
-          if(colIndex ===result.length - 1) {
-            setTimeout(() => onComplete?.(),800);
-          }
-        }, 50);
-      }, colIndex * 500);
-    });
-  }
+        inner.style.transition = 'transform 0.8s ease-out';
+        inner.style.transform = 'translateY(0px)';
+        if (colIndex === result.length - 1) {
+          setTimeout(() => onComplete?.(), 800);
+        }
+      }, 50);
+    }, colIndex * 500);
+  });
+}
 }

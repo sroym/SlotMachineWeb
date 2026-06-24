@@ -1,6 +1,5 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import {AuthService} from './auth.service';
-import { withNoXsrfProtection } from '@angular/common/http';
 
 describe('AuthService', () => {
   let service: AuthService;
