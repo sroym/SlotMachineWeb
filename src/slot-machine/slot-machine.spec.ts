@@ -45,7 +45,8 @@ describe('SlotMachine', () => {
     component.ClickSpin();
     httpMock.expectOne(`${environment.apiUrl}/Slot?bet=10`).flush({
       userMoney: 1000,
-      screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']]
+      screen: [['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$'],['$','$','$']],
+      stopIndexes:[0, 0, 0, 0, 0],
     });
     expect(component.Name()).toBe('角子老虎機 哪有賭徒天天輸!');
 
@@ -66,7 +67,8 @@ describe('SlotMachine', () => {
         ['7','2','$'],
         ['$','$','$'],
         ['7','$','$']
-      ]
+      ],
+      stopIndexes:[0, 0, 0, 0, 0],
     });
     expect(component.Money()).toBe(1000);
   });
@@ -84,6 +86,7 @@ describe('SlotMachine', () => {
         ['$', '$', '$'],
         ['7', '$', '$'],
       ],
+      stopIndexes: [0, 0, 0, 0, 0],
     });
     expect(component.WinMoney()).toBe(0);
     expect(component.Money()).toBe(1000);

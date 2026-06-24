@@ -4,7 +4,7 @@ import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../auth/auth.service';
 import {routes} from '../app.routes';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { environment } from '../../environment/environment';
 
 describe('Login', () => {
@@ -38,7 +38,15 @@ describe('Login', () => {
     component.ClickLogin();
     httpMock.expectOne(`${environment.apiUrl}/Login`).flush('fake-token');
     expect(authService.GetToken()).toBe('fake-token');
-
+  });
+  it('登入成功後跳到/slot', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    component.username = 'Roy';
+    component.Password = 'password7777';
+    component.ClickLogin();
+    httpMock.expectOne(`${environment.apiUrl}/Login`).flush('fake-token');
+    expect(navigateSpy).toHaveBeenCalledWith(['/slot']);
   });
   it('帳號密碼錯誤，顯示錯誤訊息', () => {
     component.username = 'Roy';

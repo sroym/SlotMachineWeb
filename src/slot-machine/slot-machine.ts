@@ -45,7 +45,7 @@ export class SlotMachine {
     }
     this.CallSpinApi();
     this.StartRolling();
-    // rxjs
+
     let message = this.Name();
     let AddMessage = ' 哪有賭徒天天輸!';
     if (message.includes(AddMessage)) return;
